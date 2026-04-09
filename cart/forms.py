@@ -21,7 +21,7 @@ class AddToCartForm(forms.Form):
                 )
     
 
-class UpdateCartItemForm(forms.ModelForm):
+class UpdateCartitemForm(forms.ModelForm):
     class Meta:
         model = Cartitem
         fields = ['quantity']

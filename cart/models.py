@@ -16,12 +16,12 @@ class Cart(models.Model):
 
     @property
     def total_items(self):
-        return 0
+        return sum(item.quantity for item in self.items.all())
     
     
     @property
     def subtotal(self):
-        return 0
+        return sum(item.total_price for item in self.items.all())
     
 
     def add_product(self, product, product_size, quantity=1):
@@ -47,7 +47,8 @@ class Cart(models.Model):
         except Cartitem.DoesNotExist:
             return False
         
-    def update_item_quantity(self,item_id,quantity):
+    
+    def update_item_quantity(self, item_id, quantity):
         try:
             item = self.items.get(id=item_id)
             if quantity > 0:
@@ -59,27 +60,27 @@ class Cart(models.Model):
         except Cartitem.DoesNotExist:
             return False
         
-
+    
     def clear(self):
         self.items.all().delete()
 
 
 class Cartitem(models.Model):
-    cart = models.ForeignKey(Cart, related_name='item', on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     product_size = models.ForeignKey(ProductSize, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     added_at = models.DateTimeField(auto_now_add=True)
 
 
-    class Mete:
+    class Meta:
         unique_together = ('cart', 'product', 'product_size')
 
-
+    
     def __str__(self):
-        return f"{self.product.name}-{self.product_size.size.name} x {self.quantity}"
+        return f"{self.product.name} - {self.product_size.size.name} x {self.quantity}"
     
 
     @property
     def total_price(self):
-       return Decimal(str(self.product.price)) * self.quantity
+        return Decimal(str(self.product.price)) * self.quantity

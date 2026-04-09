@@ -4,8 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
+from .forms import CustomUserCreationForm, CustomUserLoginForm, \
+    CustomUserUpdateForm
 from .models import CustomUser
-from .forms import CustomUserCreationForm, CustomUserLoginForm,CustomUserUpdateForm
 from django.contrib import messages
 from main.models import Product
 from orders.models import Order
